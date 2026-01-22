@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import FeaturesSection from './components/FeaturesSection';
@@ -10,13 +10,29 @@ import FeaturesPage from './components/FeaturesPage';
 import HowItWorksPage from './components/HowItWorksPage';
 import TransitionScreen from './components/LoadingScreen';
 import DashboardPage from './components/DashboardPage';
+import DemoPage from './components/DemoPage';
+import { ScannedProduct } from './services/api';
+import ToastContainer from './components/ui/Toast';
 
-type Page = 'landing' | 'login' | 'features' | 'how-it-works' | 'dashboard';
+type Page = 'landing' | 'login' | 'features' | 'how-it-works' | 'dashboard' | 'demo';
+
+export interface ToastMessage {
+    id: number;
+    title: string;
+    description: string;
+    variant: 'success' | 'destructive';
+}
 
 const App: React.FC = () => {
     const [page, setPage] = useState<Page>('landing');
     const [renderedPage, setRenderedPage] = useState<Page>(page);
     const [isTransitioning, setIsTransitioning] = useState(false);
+    const [toasts, setToasts] = useState<ToastMessage[]>([]);
+
+    const showToast = useCallback((title: string, description: string, variant: 'success' | 'destructive' = 'success') => {
+        const newToast: ToastMessage = { id: Date.now(), title, description, variant };
+        setToasts(currentToasts => [...currentToasts, newToast]);
+    }, []);
 
     const navigate = (targetPage: Page) => {
         if (page === targetPage || isTransitioning) return;
@@ -26,10 +42,11 @@ const App: React.FC = () => {
         
         setTimeout(() => {
             setRenderedPage(targetPage);
+            window.scrollTo(0, 0); // Scroll to top on page change
             setTimeout(() => {
                 setIsTransitioning(false);
-            }, 300); // Corresponds to the fade-in of the new page
-        }, 800); // Duration of the transition screen
+            }, 300);
+        }, 800);
     };
     
     const handleScrollToPricing = () => {
@@ -54,11 +71,30 @@ const App: React.FC = () => {
     useEffect(() => {
         setIsLoaded(true);
     }, []);
+    
+    const speak = (text: string) => {
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'pt-BR';
+            window.speechSynthesis.speak(utterance);
+        }
+    };
+
+    const renderAppPage = () => {
+        switch(renderedPage) {
+            case 'dashboard':
+                return <DashboardPage />;
+            case 'demo':
+                return <DemoPage onNavigate={navigate} showToast={showToast} speak={speak} />;
+            default:
+                return null;
+        }
+    }
 
     const renderMarketingContent = () => {
         switch (renderedPage) {
             case 'login':
-                return <LoginPage onNavigateHome={() => navigate('landing')} onLoginSuccess={() => navigate('dashboard')} />;
+                return <LoginPage onNavigateHome={() => navigate('landing')} onLoginSuccess={() => navigate('dashboard')} onAccessDemo={() => navigate('demo')} />;
             case 'features':
                 return <FeaturesPage />;
             case 'how-it-works':
@@ -75,15 +111,16 @@ const App: React.FC = () => {
         }
     };
 
-    const isDashboard = renderedPage === 'dashboard';
+    const isAppPage = renderedPage === 'dashboard' || renderedPage === 'demo';
 
     return (
         <>
+            <ToastContainer toasts={toasts} setToasts={setToasts} />
             {isTransitioning && <TransitionScreen />}
             
-            {isDashboard ? (
+            {isAppPage ? (
                 <div className={`transition-opacity duration-300 ${isLoaded && !isTransitioning ? 'opacity-100' : 'opacity-0'}`}>
-                    <DashboardPage />
+                    {renderAppPage()}
                 </div>
             ) : (
                 <div className={`transition-opacity duration-300 ${isLoaded && !isTransitioning ? 'opacity-100' : 'opacity-0'}`}>

@@ -1,5 +1,7 @@
 {
   "name": "Copy of VAPT.AI",
   "description": "VAPT.AI is a modern web application for intelligent stock management, leveraging AI to streamline warehouse operations. It offers features like barcode scanning, voice commands, visual dashboards, and AI-driven suggestions for pricing and inventory control.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "camera"
+  ]
 }
