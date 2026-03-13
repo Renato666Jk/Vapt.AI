@@ -1,20 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 📦 Vapt.AI - Logística Inteligente & Visão Computacional
 
-# Run and deploy your AI Studio app
+O **Vapt.AI** é uma plataforma de gestão de inventário que utiliza **Inteligência Artificial** e **Visão Computacional** para automatizar a categorização de produtos. O sistema transforma imagens de estoque em dados estruturados, sugerindo preços e organizando a logística de forma autônoma. 🚀
 
-This contains everything you need to run your app locally.
+## ✨ Funcionalidades
+- **Reconhecimento de Produtos:** Identificação automática via IA através de fotos ou vídeos.
+- **Categorização Inteligente:** Integração com a **API do Gemini** para classificar itens e sugerir precificação baseada no mercado.
+- **Controle de Estoque:** Dashboard em tempo real com entrada e saída de mercadorias.
+- **Sugestão de Preços:** Algoritmo que analisa o produto e propõe valores competitivos.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1__nw9AskPH8TUgsXOXiaJ8wUvUa0tlA4
+## 🛠️ Tecnologias
+- **Backend:** Python (Flask/FastAPI)
+- **IA/ML:** Google Gemini API & OpenCV
+- **Frontend:** Interface ágil (Vibe Coding Style)
+- **Integração:** Dashboards de logística e OCR
 
-## Run Locally
+## 🚀 Como Executar
+1. Clone o repositório:
+   ```bash
+   git clone [https://github.com/Renato666Jk/Vapt.AI.git](https://github.com/Renato666Jk/Vapt.AI.git)
 
-**Prerequisites:**  Node.js
+   Configure sua GEMINI_API_KEY no arquivo .env.
 
+# Instale as dependências:
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+pip install -r requirements.txt
+
+# Inicie a aplicação:
+python app.py
